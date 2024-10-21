@@ -73,7 +73,12 @@ juce_generate_juce_header(FrequencyShifter)
 
 # Create source file GLOB
 
-file(GLOB_RECURSE MY_SOURCES Source/**)
+file(GLOB_RECURSE MY_SOURCES 
+    Source/PluginEditor.cpp
+    Source/PluginEditor.h
+    Source/PluginProcessor.cpp
+    Source/PluginProcessor.h
+    Source/Vendor/hilbert-iir/hilbert.h)
 
 # JUCE repaint debugging
 
