@@ -1,3 +1,6 @@
 [submodule "JUCE"]
 	path = JUCE
 	url = https://github.com/juce-framework/JUCE
+[submodule "Source/Vendor/hilbert-iir"]
+	path = Source/Vendor/hilbert-iir
+	url = https://github.com/Signalsmith-Audio/hilbert-iir
