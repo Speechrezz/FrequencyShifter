@@ -19,9 +19,21 @@ FrequencyShifterAudioProcessor::FrequencyShifterAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ),
+       treeState(*this, nullptr, "PARAMETER", createParameterLayout())
 #endif
 {}
+
+juce::AudioProcessorValueTreeState::ParameterLayout FrequencyShifterAudioProcessor::createParameterLayout()
+{
+    using namespace juce;
+    AudioProcessorValueTreeState::ParameterLayout layout;
+
+    // --Amount--
+    layout.add(std::make_unique<AudioParameterFloat>(ParameterID{ "shift",  1 }, "Shift", -1000.f, 1000.f, 0.f));
+
+    return layout;
+}
 
 FrequencyShifterAudioProcessor::~FrequencyShifterAudioProcessor()
 {}
@@ -160,6 +172,9 @@ void FrequencyShifterAudioProcessor::getStateInformation (juce::MemoryBlock& des
     auto xmlState = std::make_unique<juce::XmlElement>(JucePlugin_Name);
     xmlState->setAttribute("version", JucePlugin_VersionString);
 
+    auto xmlTreeState = treeState.copyState().createXml();
+    xmlState->addChildElement(xmlTreeState.release());
+
     DBG("\nXML:\n" << xmlState->toString());
     copyXmlToBinary(*xmlState, destData);
 }
@@ -168,10 +183,12 @@ void FrequencyShifterAudioProcessor::setStateInformation (const void* data, int 
 {
     DBG("Load state...");
     std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes));
-    if (xmlState.get() == nullptr)
+    if (!xmlState)
         return;
 
     DBG("\nXML:\n" << xmlState->toString());
+    if (auto* xmlTreeState = xmlState->getChildByName(treeState.state.getType()))
+        treeState.replaceState(juce::ValueTree::fromXml(*xmlTreeState));
 }
 
 //==============================================================================
