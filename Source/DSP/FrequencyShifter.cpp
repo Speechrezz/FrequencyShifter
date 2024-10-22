@@ -44,7 +44,7 @@ void FrequencyShifter::process(const juce::dsp::ProcessContextReplacing<float>& 
             
             // Heterodyne/ringmod
             const auto phaser = std::polar(1.f, phase);
-            outputPointer[i] = (inputPointer[i] * phaser).real();
+            outputPointer[i] = (filteredSample * phaser).real();
             phase += phaseDelta;
         }
     }
