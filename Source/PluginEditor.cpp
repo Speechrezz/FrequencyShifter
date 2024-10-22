@@ -10,9 +10,13 @@
 #include "PluginEditor.h"
 
 FrequencyShifterAudioProcessorEditor::FrequencyShifterAudioProcessorEditor (FrequencyShifterAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor(p)
+    : AudioProcessorEditor (&p), audioProcessor(p), shiftAttach(*p.treeState.getParameter("shift"), shiftSlider)
 {
     setSize(600, 400);
+
+    addAndMakeVisible(shiftSlider);
+    shiftSlider.setSliderStyle(juce::Slider::RotaryVerticalDrag);
+    shiftSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 100, 20);
 }
 
 FrequencyShifterAudioProcessorEditor::~FrequencyShifterAudioProcessorEditor()
@@ -25,4 +29,6 @@ void FrequencyShifterAudioProcessorEditor::paint (juce::Graphics& g)
 
 void FrequencyShifterAudioProcessorEditor::resized()
 {
+    auto shiftBounds = getLocalBounds().withSizeKeepingCentre(100, 100);
+    shiftSlider.setBounds(shiftBounds);
 }

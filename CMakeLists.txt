@@ -78,6 +78,8 @@ file(GLOB_RECURSE MY_SOURCES
     Source/PluginEditor.h
     Source/PluginProcessor.cpp
     Source/PluginProcessor.h
+    Source/DSP/**
+    Source/GUI/**
     Source/Vendor/hilbert-iir/hilbert.h)
 
 # JUCE repaint debugging
@@ -95,6 +97,8 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${MY_SOURCES})
 
 target_sources(FrequencyShifter
     PRIVATE ${MY_SOURCES})
+
+target_include_directories(FrequencyShifter PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 
 # `target_compile_definitions` adds some preprocessor definitions to our target. In a Projucer
 # project, these might be passed in the 'Preprocessor Definitions' field. JUCE modules also make use

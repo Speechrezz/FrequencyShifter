@@ -29,7 +29,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout FrequencyShifterAudioProcess
     using namespace juce;
     AudioProcessorValueTreeState::ParameterLayout layout;
 
-    // --Amount--
+    // --Frequency Shift--
     layout.add(std::make_unique<AudioParameterFloat>(ParameterID{ "shift",  1 }, "Shift", -1000.f, 1000.f, 0.f));
 
     return layout;
@@ -107,7 +107,7 @@ void FrequencyShifterAudioProcessor::prepareToPlay (double sampleRate, int sampl
     juce::dsp::ProcessSpec spec{ sampleRate, (juce::uint32)samplesPerBlock, (juce::uint32)channels };
     DBG("prepareToPlay() - sampleRate: " << sampleRate << ", maxBlockSize: " << (int)spec.maximumBlockSize << ", numChannels: " << (int)spec.numChannels);
 
-    
+    frequencyShifter.prepare(spec);
 }
 
 void FrequencyShifterAudioProcessor::releaseResources()
@@ -151,7 +151,10 @@ void FrequencyShifterAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
 
-    
+
+    juce::dsp::AudioBlock<float> block(buffer);
+    juce::dsp::ProcessContextReplacing<float> context(block);
+    frequencyShifter.process(context);
 }
 
 //==============================================================================

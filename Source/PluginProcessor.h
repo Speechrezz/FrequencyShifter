@@ -9,6 +9,7 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "DSP/FrequencyShifter.h"
 
 //==============================================================================
 /**
@@ -58,6 +59,8 @@ public:
 
 private:
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
+
+    xynth::FrequencyShifter frequencyShifter;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FrequencyShifterAudioProcessor)
 };

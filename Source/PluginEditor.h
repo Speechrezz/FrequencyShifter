@@ -23,5 +23,8 @@ public:
 private:
     FrequencyShifterAudioProcessor& audioProcessor;
 
+    juce::Slider shiftSlider;
+    juce::SliderParameterAttachment shiftAttach;
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FrequencyShifterAudioProcessorEditor)
 };
