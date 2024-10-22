@@ -20,7 +20,8 @@ FrequencyShifterAudioProcessor::FrequencyShifterAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ),
-       treeState(*this, nullptr, "PARAMETER", createParameterLayout())
+       treeState(*this, nullptr, "PARAMETER", createParameterLayout()),
+       frequencyShifter(*treeState.getRawParameterValue("shift"))
 #endif
 {}
 

@@ -20,6 +20,7 @@ void HilbertProcessor::prepare(const juce::dsp::ProcessSpec& spec) noexcept
 
 void HilbertProcessor::process(const juce::dsp::AudioBlock<const float>& input, ComplexBlock<float>& output) noexcept
 {
+    jassert(input.getNumChannels() == output.getNumChannels());
     jassert(input.getNumSamples() == output.getNumSamples());
 
     for (int channel = 0; channel < input.getNumChannels(); ++channel)

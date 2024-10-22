@@ -34,6 +34,12 @@ public:
         return buffer[channelIndex].data();
     }
 
+    const Complex* getChannelPointer(int channelIndex) const
+    {
+        jassert(channelIndex < (int)buffer.size());
+        return buffer[channelIndex].data();
+    }
+
     int getNumChannels() const { return (int)buffer.size(); }
     size_t getNumSamples() const { return buffer.empty() ? 0 : buffer[0].size(); }
 
@@ -61,6 +67,11 @@ public:
     }
 
     Complex* getChannelPointer(int channelIndex)
+    {
+        return buffer.getChannelPointer(channelIndex);
+    }
+
+    const Complex* getChannelPointer(int channelIndex) const
     {
         return buffer.getChannelPointer(channelIndex);
     }

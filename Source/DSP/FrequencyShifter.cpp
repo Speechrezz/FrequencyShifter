@@ -13,9 +13,14 @@
 namespace xynth
 {
 
+FrequencyShifter::FrequencyShifter(std::atomic<float>& frequencyParameter)
+    : ringMod(frequencyParameter)
+{}
+
 void FrequencyShifter::prepare(const juce::dsp::ProcessSpec& spec) noexcept
 {
     hilbertProcessor.prepare(spec);
+    ringMod.prepare(spec);
     complexBuffer.setSize(spec.maximumBlockSize, spec.numChannels);
 }
 
@@ -23,6 +28,7 @@ void FrequencyShifter::process(const juce::dsp::ProcessContextReplacing<float>& 
 {
     ComplexBlock<float> complexBlock(complexBuffer, 0, context.getInputBlock().getNumSamples());
     hilbertProcessor.process(context.getInputBlock(), complexBlock);
+    ringMod.process(complexBlock, context.getOutputBlock());
 }
 
 } // namespace xynth
