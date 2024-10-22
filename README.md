@@ -1,6 +1,6 @@
 # Frequency Shifter
 
-Basic frequency shifter implementation using [SignalSmith's IIR Hilbert Filter](https://github.com/Signalsmith-Audio/hilbert-iir) and [JUCE](https://github.com/juce-framework/JUCE).
+Basic frequency shifter implementation using [Signalsmith's IIR Hilbert Filter](https://github.com/Signalsmith-Audio/hilbert-iir) and [JUCE](https://github.com/juce-framework/JUCE).
 
 ## TODO
 
