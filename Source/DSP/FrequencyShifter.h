@@ -11,9 +11,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "ComplexBuffer.h"
-#include "ComplexRingMod.h"
-#include "HilbertProcessor.h"
+#include "Vendor/hilbert-iir/hilbert.h"
 
 namespace xynth
 {
@@ -26,9 +24,12 @@ public:
     void process(const juce::dsp::ProcessContextReplacing<float>& context) noexcept;
 
 private:
-    HilbertProcessor hilbertProcessor;
-    ComplexRingMod ringMod;
-    ComplexBuffer<float> complexBuffer;
+    using HilbertIIR = signalsmith::hilbert::HilbertIIR<float>;
+    std::unique_ptr<HilbertIIR> hilbertIIR;
+
+    std::atomic<float>& frequencyParameter;
+    float radiansCoefficient = 0.f;
+    float phase = 0.f;
 
 };
 }
