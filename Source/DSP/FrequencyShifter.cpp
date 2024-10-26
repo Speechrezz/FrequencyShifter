@@ -20,9 +20,14 @@ void FrequencyShifter::prepare(const juce::dsp::ProcessSpec& spec) noexcept
 {
     hilbertIIR = std::make_unique<HilbertIIR>(spec.sampleRate, spec.numChannels);
     radiansCoefficient = juce::MathConstants<float>::twoPi / (float)spec.sampleRate;
+
+    highpassFilter.prepare(spec);
+    lowpassFilter .prepare(spec);
+    sampleRate = spec.sampleRate;
+    nyquistFrequency = static_cast<float>(sampleRate) * 0.5f;
 }
 
-void FrequencyShifter::process(const juce::dsp::ProcessContextReplacing<float>& context) noexcept
+void FrequencyShifter::process(juce::dsp::ProcessContextReplacing<float>& context) noexcept
 {
     const auto& inputBlock = context.getInputBlock();
     auto& outputBlock = context.getOutputBlock();
@@ -30,6 +35,11 @@ void FrequencyShifter::process(const juce::dsp::ProcessContextReplacing<float>& 
     const float frequency = frequencyParameter.load(std::memory_order_relaxed);
     const float phaseDelta = frequency * radiansCoefficient;
     const float startPhase = phase;
+
+    updateFilters(frequency);
+
+    highpassFilter.process(context);
+    lowpassFilter .process(context);
 
     for (int channel = 0; channel < inputBlock.getNumChannels(); ++channel)
     {
@@ -50,6 +60,22 @@ void FrequencyShifter::process(const juce::dsp::ProcessContextReplacing<float>& 
     }
 
     phase = std::fmod(phase, juce::MathConstants<float>::twoPi);
+}
+
+void FrequencyShifter::updateFilters(float frequency)
+{
+    jassert(sampleRate > 0.0);
+
+    float highpassCutoff = -frequency;
+    highpassCutoff = juce::jlimit(20.f, 20000.f, highpassCutoff);
+
+    float lowpassCutoff = nyquistFrequency - frequency;
+    lowpassCutoff = juce::jlimit(20.f, 20000.f, lowpassCutoff);
+
+    DBG("highpassCutoff: " << highpassCutoff << ", lowpassCutoff: " << lowpassCutoff);
+
+    *highpassFilter.state = *FilterType::State::makeHighPass(sampleRate, highpassCutoff);
+    *lowpassFilter.state  = *FilterType::State::makeLowPass(sampleRate, lowpassCutoff);
 }
 
 } // namespace xynth
