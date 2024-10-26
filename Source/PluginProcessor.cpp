@@ -117,6 +117,11 @@ void FrequencyShifterAudioProcessor::releaseResources()
     // spare memory, etc.
 }
 
+void FrequencyShifterAudioProcessor::reset()
+{
+    frequencyShifter.reset();
+}
+
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool FrequencyShifterAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {

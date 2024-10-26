@@ -56,4 +56,11 @@ void FrequencyShifter::process(juce::dsp::ProcessContextReplacing<float>& contex
     phase = std::fmod(phase, juce::MathConstants<float>::twoPi);
 }
 
+void FrequencyShifter::reset() noexcept
+{
+    hilbertProcessor.reset();
+    antialiasingProcessor.reset();
+    phase = 0.f;
+}
+
 } // namespace xynth
