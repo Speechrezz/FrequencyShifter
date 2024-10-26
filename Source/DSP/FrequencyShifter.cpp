@@ -72,8 +72,6 @@ void FrequencyShifter::updateFilters(float frequency)
     float lowpassCutoff = nyquistFrequency - frequency;
     lowpassCutoff = juce::jlimit(20.f, 20000.f, lowpassCutoff);
 
-    DBG("highpassCutoff: " << highpassCutoff << ", lowpassCutoff: " << lowpassCutoff);
-
     *highpassFilter.state = *FilterType::State::makeHighPass(sampleRate, highpassCutoff);
     *lowpassFilter.state  = *FilterType::State::makeLowPass(sampleRate, lowpassCutoff);
 }
